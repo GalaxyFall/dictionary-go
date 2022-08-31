@@ -3,7 +3,6 @@ package db
 import (
 	"errors"
 	"fmt"
-	"log"
 
 	"github.com/boltdb/bolt"
 )
@@ -29,14 +28,14 @@ func Dbinit() {
 			_, err := tx.CreateBucket([]byte(bucketname)) //创建桶
 			if err != nil {
 				//也可以在这里对表做插入操作
-				log.Fatal(err)
+				fmt.Println(err)
 			}
 		}
 		return nil //一定要返回nil
 	})
 	//更新数据库失败
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("init bucket failed")
 	}
 
 }
@@ -76,7 +75,7 @@ func PutDb(key, value string) error {
 		if err := b.Put([]byte(key), []byte(value)); err != nil {
 			return err
 		}
-		return nil
+		return nil //事务必须返回nil
 	})
 	if err != nil {
 		fmt.Println("put key value error")
