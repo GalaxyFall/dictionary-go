@@ -16,25 +16,23 @@ const (
 
 //自动调用init初始化
 func Dbinit() {
-	dbfd, err := bolt.Open("my.db", 0600, nil) //打开数据库文件 初始化
+	db, err := bolt.Open("my.db", 0600, nil) //打开数据库文件 初始化
 	if err != nil {
 		fmt.Println("open boltdb error")
 		return
 	}
+	dbfd = db //直接赋值好像有作用域问题
 	err = dbfd.Update(func(tx *bolt.Tx) error {
-
-		//判断要创建的表是否存在
+		//判断要创建的桶是否存在   或者使用CreateBucketIfNotExists
 		b := tx.Bucket([]byte(bucketname))
 		if b == nil {
-			//创建叫"MyBucket"的表
-			_, err := tx.CreateBucket([]byte(bucketname))
+			_, err := tx.CreateBucket([]byte(bucketname)) //创建桶
 			if err != nil {
 				//也可以在这里对表做插入操作
 				log.Fatal(err)
 			}
 		}
-		//一定要返回nil
-		return nil
+		return nil //一定要返回nil
 	})
 	//更新数据库失败
 	if err != nil {
@@ -61,7 +59,7 @@ func GetDb(key string) (string, error) {
 		res = string(v) //转换为string
 		return nil
 	})
-	if err != nil {
+	if err != nil { //没有则返回err
 		return "", err
 	}
 	return res, nil

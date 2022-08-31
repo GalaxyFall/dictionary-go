@@ -14,6 +14,10 @@ const (
 	UerPassword = "W_h0op7WCB9qcLUVl34B"
 )
 
+//百度翻译api接口
+var Url = "http://api.fanyi.baidu.com/api/trans/vip/translate"
+
+//抽象成一个model
 type TranslateModel struct {
 	Q     string
 	From  string
@@ -23,6 +27,7 @@ type TranslateModel struct {
 	Sign  string
 }
 
+//接收返回json的结构体  拆分
 type TransResult struct {
 	Src string `json:"src"`
 	Dst string `json:"dst"`
@@ -69,6 +74,3 @@ func SumString(content string) string {
 	value := hex.EncodeToString(bys[0:]) //根据数组构造一个切片
 	return value
 }
-
-//百度翻译api接口
-var Url = "http://api.fanyi.baidu.com/api/trans/vip/translate"
